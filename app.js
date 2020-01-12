@@ -4,6 +4,7 @@ const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const passport = require('passport');
 const mongoose = require('mongoose');
 const path = require('path');
 
@@ -39,6 +40,9 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
 }));
+// passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 //flash Middleware
 app.use(flash());
@@ -48,6 +52,7 @@ app.use(function(req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
   next();
 });
 
@@ -59,8 +64,13 @@ const users = require('./routes/users');
 app.use('/ideas', ideas);
 app.use('/users', users);
 
+// Passport config
+require('./config/passport')(passport);
+
 // Static Folder
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/ideas', express.static(path.join(__dirname, 'public')));
+app.use('/users', express.static(path.join(__dirname, 'public')));
 
 //Index or homepage route
 app.get('/', (req, res) => {

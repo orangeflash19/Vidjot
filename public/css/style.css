@@ -1,4 +1,11 @@
-.logo{
+body {
+  background-image: url('../img/bg1.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.logo {
   width: 130px;
   margin: auto;
 }
